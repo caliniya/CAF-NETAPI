@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="CAF 网络 API：获取 Cloudflare 服务器 UTC 时间。">
+  <title>CAF NETAPI · 时间</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">CAF<span>NETAPI</span></a>
+    <a class="source-link" href="https://github.com/caliniya/CAF-NETAPI" target="_blank" rel="noopener noreferrer">源代码 ↗</a>
+  </header>
+
+  <main>
+    <div class="intro">
+      <p class="eyebrow">TIME API</p>
+      <h1>为记忆留下一刻。</h1>
+      <p class="subtitle">从 Cloudflare 获取 UTC 时间，记录每一次相遇。</p>
+    </div>
+
+    <section class="clock-card" aria-label="当前时间">
+      <div class="card-top">
+        <span class="timezone-label">COORDINATED UNIVERSAL TIME</span>
+        <span id="status" class="status" data-state="loading" role="status">正在获取时间</span>
+      </div>
+      <time id="clock" class="clock">--:--:--</time>
+      <div class="date-row"><span id="utc-date">---- / -- / --</span><span class="utc-tag">UTC +00:00</span></div>
+      <div class="clock-footer">
+        <p>你的时区 <span id="local-clock">—</span></p>
+        <button id="refresh" type="button">重新同步 <span aria-hidden="true">↻</span></button>
+      </div>
+    </section>
+
+    <div class="stats" aria-label="取时信息">
+      <div><span class="stat-label">时间来源</span><strong id="source">—</strong></div>
+      <div><span class="stat-label">网络往返</span><strong id="latency">—</strong></div>
+      <div><span class="stat-label">最近取时（UTC）</span><strong id="synced-at">—</strong></div>
+    </div>
+    <p id="notice" class="notice" role="status">页面显示值根据最近一次取时推进，每分钟重新同步。</p>
+
+    <section class="api-card" aria-labelledby="api-title">
+      <div class="api-heading"><h2 id="api-title">时间接口</h2><span class="method">GET</span></div>
+      <div class="endpoint-row"><a id="endpoint" href="/api/time" target="_blank" rel="noopener">/api/time</a><button id="copy" type="button">复制地址</button></div>
+      <p class="api-description">返回服务器 UTC 时间与 Unix 毫秒时间戳。添加 <code>?nonce=请求标识</code>，响应会原样返回，方便核对本次取时。</p>
+      <pre aria-label="最近一次取时的原始数据"><code id="payload">等待接口响应…</code></pre>
+      <p class="api-note">时间来自服务器系统时钟，网络补偿为往返耗时的一半估计值。本机回退会明确标注来源。</p>
+    </section>
+    <noscript><p class="notice">启用 JavaScript 后可查看时钟。也可以直接访问 <a href="/api/time">/api/time</a> 获取时间。</p></noscript>
+  </main>
+
+  <footer>CAF NETAPI <span>·</span> 每条记忆，都有来处。</footer>
+</body>
+</html>
