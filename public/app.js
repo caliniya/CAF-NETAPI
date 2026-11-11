@@ -1,8 +1,7 @@
 import { currentUnixMs, localTime, readTime } from './clock.js'
 
 const elements = Object.fromEntries([
-  'clock', 'utc-date', 'local-clock', 'status', 'source', 'latency',
-  'synced-at', 'notice', 'payload', 'endpoint', 'refresh', 'copy',
+  'clock', 'utc-date', 'local-clock', 'status', 'endpoint', 'refresh', 'copy',
 ].map(id => [id, document.getElementById(id)]))
 const endpoint = new URL('/api/time', location.origin).href
 elements.endpoint.href = endpoint
@@ -31,25 +30,16 @@ async function sync() {
   syncing = true
   elements.refresh.disabled = true
   elements.status.dataset.state = 'loading'
-  elements.status.textContent = '正在获取时间'
+  elements.status.textContent = '正在同步'
   try {
     clock = await readTime(endpoint)
     elements.status.dataset.state = 'online'
-    elements.status.textContent = '在线取时'
-    elements.source.textContent = 'Cloudflare'
-    elements.latency.textContent = `${Math.round(clock.roundTripMs)} ms`
-    elements.notice.textContent = '已获取服务器时间；页面按最近一次取时推进，每分钟重新同步。'
-  } catch (error) {
-    const reason = error.name === 'TimeoutError' ? '取时超时' : (error.message || '无法连接时间接口')
-    clock = localTime(reason)
+    elements.status.textContent = 'Cloudflare'
+  } catch {
+    clock = localTime('在线取时失败')
     elements.status.dataset.state = 'local'
-    elements.status.textContent = '本机时间 · 回退'
-    elements.source.textContent = '本机（未校验）'
-    elements.latency.textContent = '—'
-    elements.notice.textContent = `${reason}。当前使用本机时间，恢复连接后会重新尝试在线取时。`
+    elements.status.textContent = '连接失败 · 使用本机时间'
   } finally {
-    elements['synced-at'].textContent = clock.sample.utc.slice(11, 19)
-    elements.payload.textContent = JSON.stringify(clock.sample, null, 2)
     renderClock()
     elements.refresh.disabled = false
     syncing = false

@@ -11,3 +11,6 @@
 
 /styles.css
   Cache-Control: no-cache
+
+/base.css
+  Cache-Control: no-cache
